@@ -30,44 +30,78 @@ double inputX() {
     return x;
 }
 
+//double cosCoef(int& n, vector <Eq>& equations, int j) {
+//    double sum = 0;
+//    for (int i = 0; i < n - 1; i++) {
+//        sum += equations[i].y * cos(2 * M_PI * i * j / (double)n);
+//    }
+//    return 1.0 / (double)n * sum;
+//}
+//
+//double sinCoef(int& n, vector <Eq>& equations, int j) {
+//    double sum = 0;
+//    for (int i = 0; i < n - 1; i++) {
+//        sum += equations[i].y * sin(2 * M_PI * i * j / (double)n);
+//    }
+//    return 1.0 / (double)n * sum;
+//}
+//
+//double cosSeries(double& x, int& n, vector <Eq>& equations, double& T) {
+//    double sum = 0;
+//    for (int i = 1; i <= (n - 1) / 2; i++) { // ???
+//        sum += cosCoef(n, equations, i) * cos(2 * M_PI * i * (x - equations[0].x) / T);
+//    }
+//    return sum;
+//}
+//
+//double sinSeries(double& x, int& n, vector <Eq>& equations, double& T) {
+//    double sum = 0;
+//    for (int i = 1; i <= (n - 1) / 2; i++) { // ???
+//        sum += sinCoef(n, equations, i) * sin(2 * M_PI * i * (x - equations[0].x) / T);
+//    }
+//    return sum;
+//}
+//
+//double cosZeroCoef(int& n, vector <Eq>& equations) {
+//    double sum = 0;
+//    for (int i = 0; i <= n - 1; i++) {
+//        sum += equations[i].y;
+//    }
+//    return 1.0 / (double)n * sum;
+//}
+
 double cosCoef(int& n, vector <Eq>& equations, int j) {
     double sum = 0;
-    for (int i = 0; i < ((n - 1) / 2); i++) {
+    for (int i = 0; i < n - 1; i++) {
         sum += equations[i].y * cos(2 * M_PI * i * j / (double)n);
     }
-    return 1.0 / ((n - 1) / 2.0) * sum;
+    return 1.0 / (double)(n) * sum;
 }
 
 double sinCoef(int& n, vector <Eq>& equations, int j) {
     double sum = 0;
-    for (int i = 0; i < ((n - 1) / 2); i++) {
+    for (int i = 0; i < n - 1; i++) {
         sum += equations[i].y * sin(2 * M_PI * i * j / (double)n);
     }
-    return 1.0 / ((n - 1) / 2.0) * sum;
-}
-
-double cosSeries(double& x, int& n, vector <Eq>& equations, double& T) {
-    double sum = 0;
-    for (int i = 1; i < n; i++) { // ???
-        sum += cosCoef(n, equations, i) * cos(2 * M_PI * i * (x - equations[0].x) / T);
-    }
-    return sum;
-}
-
-double sinSeries(double& x, int& n, vector <Eq>& equations, double& T) {
-    double sum = 0;
-    for (int i = 1; i < n; i++) { // ???
-        sum += sinCoef(n, equations, i) * sin(2 * M_PI * i * (x - equations[0].x) / T);
-    }
-    return sum;
+    return 1.0 / (double)(n) * sum;
 }
 
 double cosZeroCoef(int& n, vector <Eq>& equations) {
     double sum = 0;
-    for (int i = 0; i < ((n - 1) / 2); i++) {
+    for (int i = 0; i < n - 1; i++) {
         sum += equations[i].y;
     }
-    return 1.0 / ((n - 1) / 2.0) * sum;
+    return 1.0 / (double)(n) * sum;
+}
+
+double series(double& x, int& n, vector <Eq>& equations, double& T) {
+    double sum = 0;
+    for (int i = 1; i < n - 1; i++) { // ???
+        double angle = 2 * M_PI * i * (x - equations[0].x) / T;
+        sum += cosCoef(n, equations, i) * cos(angle);
+        sum += sinCoef(n, equations, i) * sin(angle);
+    }
+    return sum;
 }
 
 int main()
@@ -87,5 +121,5 @@ int main()
     int n = equations.size();
     double T = equations[equations.size() - 1].x - equations[0].x;
 
-    cout << "Y(" << x << ") = " << cosZeroCoef(n, equations) + cosSeries(x, n, equations, T) + sinSeries(x, n, equations, T);
+    cout << "Y(" << x << ") = " << cosZeroCoef(n, equations) + series(x, n, equations, T);
 }
